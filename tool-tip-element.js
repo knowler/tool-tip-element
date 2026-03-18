@@ -7,7 +7,6 @@ export class ToolTipElement extends HTMLElement {
 	static {
 		this.#styles.replaceSync(`
 			:host(:state(open)) {
-				display: inline-block;
 				position-anchor: --tool-tip-anchor;
 			}
 		`);
