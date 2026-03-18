@@ -141,3 +141,6 @@ export class ToolTipElement extends HTMLElement {
 		}
 	}
 }
+
+if (new URL(import.meta.url).searchParams.has("define"))
+	customElements.define("tool-tip", ToolTipElement);
