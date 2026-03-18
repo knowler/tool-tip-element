@@ -1,4 +1,4 @@
-class ToolTipElement extends HTMLElement {
+export class ToolTipElement extends HTMLElement {
 	#internals = this.attachInternals();
 	#anchorStyleSheet = new CSSStyleSheet();
 	#interestTimeout;
