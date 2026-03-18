@@ -23,6 +23,9 @@ export class ToolTipElement extends HTMLElement {
 		this.ownerDocument.adoptedStyleSheets.push(
 			this.#anchorStyleSheet,
 		);
+
+		this.addEventListener("mouseenter", this);
+		this.addEventListener("mouseleave", this);
 	}
 
 	get type() {
@@ -105,11 +108,12 @@ export class ToolTipElement extends HTMLElement {
 	}
 
 	handleEvent(event) {
-		// TODO: handle for the popover too
 		switch (event.type) {
 			case "mouseenter":
 			case "focus":
 				clearTimeout(this.#interestTimeout);
+
+				if (this.#internals.states.has("open")) break;
 
 				this.#interestTimeout = setTimeout(() => {
 					this.#internals.states.add("open");
