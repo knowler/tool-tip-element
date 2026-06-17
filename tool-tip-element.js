@@ -47,8 +47,12 @@ export class ToolTipElement extends HTMLElement {
 		return ["for", "type"];
 	}
 	attributeChangedCallback(name, oldValue, newValue) {
+		if (!this.isConnected) return;
 		switch (name) {
 			case "for": {
+				// Skip if the element isn’t connected.
+				if (!this.isConnected) return;
+
 				const oldForElement = this.ownerDocument.getElementById(oldValue);
 				const newForElement = this.ownerDocument.getElementById(newValue);
 
@@ -70,11 +74,19 @@ export class ToolTipElement extends HTMLElement {
 				if (this.type === "description") {
 					this.#internals.role = "tooltip"
 					this.#internals.ariaHidden = false;
+
+					// Skip if the element isn’t connected.
+					if (!this.isConnected) return;
+
 					forElement.removeAttribute("aria-labelledby");
 					forElement.ariaDescribedByElements = [this];
 				} else if (this.type === "label") {
 					this.#internals.role = null;
 					this.#internals.ariaHidden = true;
+
+					// Skip if the element isn’t connected.
+					if (!this.isConnected) return;
+
 					forElement.removeAttribute("aria-describedby");
 					forElement.ariaLabelledByElements = [this];
 				}
@@ -86,6 +98,20 @@ export class ToolTipElement extends HTMLElement {
 	connectedCallback() {
 		this.popover = "hint";
 		window.addEventListener("keydown", this);
+
+		if (this.hasAttribute("for")) this.#associateForElement();
+	}
+
+	#associateForElement() {
+		const forElement = this.ownerDocument.getElementById(this.htmlFor);
+
+		// TODO: set up a mutation observer within the same scope to wait for elements with the matching ID.
+
+		// No element to associate with.
+		if (!forElement) return;
+
+		if (this.type === "description") forElement.ariaDescribedByElements = [this];
+		else if (this.type === "label") forElement.ariaLabelledByElements = [this];
 	}
 
 	disconnectedCallback() {
