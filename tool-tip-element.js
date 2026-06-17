@@ -112,6 +112,9 @@ export class ToolTipElement extends HTMLElement {
 
 		if (this.type === "description") forElement.ariaDescribedByElements = [this];
 		else if (this.type === "label") forElement.ariaLabelledByElements = [this];
+
+
+		this.#addEventListeners(forElement);
 	}
 
 	disconnectedCallback() {
